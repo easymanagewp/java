@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bzb>
+	<description>系统参数文件</description>
+	
+	<mappings>
+		<mapping code="index" ftl="index"/>
+		<mapping code="001_001_001" ftl="project_view"/>
+		<mapping code="001_002_001" ftl="project_edit"/>
+		<mapping code="002_001_001" ftl="matter"/>
+		<mapping code="002_002_001" ftl="matter_edit"/>
+		<mapping code="002_002_002" ftl="matter_view"/>
+		<mapping code="003_001_001" ftl="api"/>
+		<mapping code="003_002_001" ftl="api_edit"/>
+		<mapping code="004_001_001" ftl="doc_page"/>
+		<mapping code="004_002_001" ftl="doc_edit"/>
+		<mapping code="004_002_002" ftl="doc_view"/>
+	</mappings>
+	
+	<msg>
+		<mail>
+			<isSend>true</isSend>
+			<host>smtp.163.com</host>
+			<fromMail>bangzhongbao@163.com</fromMail>
+			<pwd>bzb123456</pwd>
+		</mail>
+		<sms>
+			<isSend>true</isSend>
+			<sn>SDK-WSS-010-07888</sn>
+			<pwd>b5ea9@f1</pwd>
+			<sign>【帮众宝】</sign>
+		</sms>
+	</msg>
+	<wechat>
+		<name>帮众宝</name>
+		<token>bzb365zwl</token>
+		<appId>wxdca78b75c4670e5c</appId>
+		<appSecret>1b53f4eaa06bd1ef501c9910ce3d883a</appSecret>
+		<encodingAesKey>L9teEbDvAWhGi7iJ84OKk3PViXHjVxQZjVGTEFahQuf</encodingAesKey>
+	</wechat>
+	<server>
+		<url>http://localhost:8011</url>
+		<name>帮众宝</name>
+	</server>
+	
+	<registion>
+		<isopen>true</isopen>
+	</registion>
+	
+	<!-- 
+	<userClient>
+		<server>http://t.bzb365.com:8081/web-user</server>
+		<clientId>5FEEA377-5337-F66A-22BE-20B3128361C1</clientId>
+		<token>9649934A-C651-0C23-858E-47917A2D2162</token>
+	</userClient>
+	 -->
+	
+	<fileManage>
+		<fileDir>E:\svn\project_manager\src\main\webapp\</fileDir>
+	</fileManage>
+	
+</bzb>

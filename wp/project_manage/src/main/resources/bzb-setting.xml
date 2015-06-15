@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bzb>
+	<description>配置文件</description>
+	<contract>
+		<address>西安高新区</address>
+		<phone>400-8888888</phone>
+		<zipCode>710077</zipCode>
+		<email>admin@bzb.cn</email>
+		<certtext>陕ICP备999999999号</certtext>
+	</contract>
+</bzb>

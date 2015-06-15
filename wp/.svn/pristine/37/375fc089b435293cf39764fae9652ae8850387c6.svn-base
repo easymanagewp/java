@@ -1,0 +1,8 @@
+{
+	"static:org.apache.commons.lang3.StringUtils.isBlank.String":[
+		"java.lang.CharSequence"
+	],
+	"static:org.apache.commons.lang3.StringUtils.isNotBlank.String": [
+		"java.lang.CharSequence"
+	]
+}

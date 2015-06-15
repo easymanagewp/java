@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd   
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd   
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd   
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd 
+       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd 
+       ">
+    <!-- 配置资源文件 -->
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations" value="classpath:jdbc.properties" />
+	</bean>
+       
+   	<!-- 配置数据源 -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+		<!-- 配置数据库连接基本信息 -->
+		<property name="jdbcUrl" value="${jdbc.url}" />
+		<property name="user" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="driverClass" value="${jdbc.driver}"></property>
+		<property name="acquireIncrement" value="3"></property>
+		<property name="initialPoolSize" value="3"></property>
+		<property name="maxIdleTime" value="60"></property>
+		<property name="maxPoolSize" value="15"></property>
+		<property name="maxStatements" value="100"></property>
+		<property name="maxStatementsPerConnection" value="100"></property>
+	</bean>
+
+	<bean id="processEngineConfiguration"
+		class="org.activiti.engine.impl.cfg.StandaloneProcessEngineConfiguration">
+		<property name="dataSource" ref="dataSource"/>
+		<!-- 数据库自动创建和更新 -->
+		<property name="databaseSchemaUpdate" value="true" />
+		<property name="databaseType" value="mysql"/>
+		<!--
+		 || 	jobExecutorActivate 是管理一系列线程的组件，可以触发定时器（包含后续的异步消息）。在单元测试场景下，很难用到多线程。因此，API允许查询（ManagemantService.createJobQuery）和
+		 ||	执行job（ManagementService.executeJob），所以job可以在单元测试中控制。要避免与job执行器冲突，可以关闭它
+		 ||	<property name="jobExecutorActivate" value="false"/>
+		  \-->
+		  
+		<!-- 
+		 || 	asyncExecutor 是一个线程池管理组件，管理一个线程池去触发定义器和其他的异步任务。
+		 || 	默认情况下，asyncExecutor 是不启用的，因为传统jobExecutor的遗留原因。
+		 || 	然而现在推荐使用新的asyncExecutor，这可以通过定义以下两个属性完成
+		 || 	asyncExecutorEnabled： 开启asyncExecutor替代就得jobExecutor
+		 ||	asyncExecutorActivate： 制定activiti引擎在启动的时候启动一个asyncExecutor线程池
+		 ||	<property name="asyncExecutorEnabled"  value="true"/>
+		 || 	<property name="asyncExecutorActivate"  value="true"/>
+		  \-->
+		  
+		<!-- 
+		 ||	定制历史存储的配置选项，这允许你调整，影响activiti引擎的历史功能设置，具体查看文档“历史配置详情”。
+		 ||	<property name="history" value="audit" />
+		  \-->
+		  
+		<!-- 
+		 ||	为所有的过程定义缓存（在它们解析的时候），因为过程定义数据没有更改数据库，默认情况下，这个缓存是没有限制的，如果想要设置限制，
+		 ||	可通过以下属性配置。
+		 ||	<property name="processDefinitionCacheLimit" value="10" />
+		  \-->
+		  
+		<!-- 
+		 ||	
+		 ||	通过此属性设置一个自己实现的LUR缓存，该缓存需实现 org.activiti.engine.impl.persistence.deploy.DeploymentCache 接口
+		 ||
+		 ||	除此以外，还有两个类似的setting：
+		 ||	knowledgeBaseCacheLimit
+		 ||	knowledgeBaseCache
+		 ||	用于进行rules缓存，当需要使用到rules tasks的时候开启
+		 ||
+		 ||	<property name="processDefinitionCache">
+  		 ||		<bean class="org.activiti.MyCache" />
+		 ||	</property>
+		 ||
+		  \-->
+		<!-- 
+		 ||
+		 ||	eventListeners 参数为一个org.activiti.engine.delegate.event.ActivitiEventListener 实现类的list集合
+		 ||	这种方式的配置，无论事什么类型的事件发生，监听器都会接收到通知
+		 ||
+		 ||	执行顺序由添加顺序决定
+		 ||	执行优先级高于特定事件监听器
+		 ||
+		 ||	<property name="eventListeners">
+		 ||		<list>
+		 ||			<bean class="org.activiti.engine.example.MyEventListener" />
+		 ||		</list>
+		 ||	</property>
+		 ||
+		  \-->
+		  
+		<!-- 
+		 ||
+		 ||	为了监听特定的事件，可以使用typedEventListeners属性，它需要一个map参数。
+		 ||	map的key事用“,”分开的事件名（或者单独的事件名），map的value是一个org.activiti.engine.delegate.event.ActivitiEventListener 实现类的list集合
+		 ||	以下代码可以监听job执行成功或失败
+		 ||
+		 ||	执行顺序由添加顺序决定
+		 ||	执行优先级低于普通事件监听器
+		 ||
+		 ||	<property name="typedEventListeners">
+		 ||		<map>
+		 ||			<entry key="JOB_EXECUTION_SUCCESS,JOB_EXECUTION_FAILURE" >
+		 ||				<list>
+		 ||					<bean class="org.activiti.engine.example.MyJobEventListener" />
+		 ||				</list>
+		 ||			</entry>
+		 ||		</map>
+		 ||	</property>
+		 ||
+		  \-->
+	</bean>
+</beans>

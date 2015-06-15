@@ -1,0 +1,22 @@
+{
+	"string:confirm:blank": "static:org.apache.commons.lang3.StringUtils.isBlank",
+	"string:confirm:notBlank": "static:org.apache.commons.lang3.StringUtils.isNotBlank",
+	"string:codec:base64:encode": "static:cn.wp.commons.wp_tools.string.Base64Tools.encodeBase64",	
+	"string:codec:base64:decode": "static:cn.wp.commons.wp_tools.string.Base64Tools.decodeBase64",
+	"string:codec:md5":"static:cn.wp.commons.wp_tools.string.MD5Tools.md5",
+	"string:get:random":"static:org.apache.commons.lang3.RandomStringUtils.random",
+	"json:load:text":"static:cn.wp.commons.wp_tools.json.JsonTools.getJSONTextByFile",
+	"json:load:object":"static:cn.wp.commons.wp_tools.json.JsonTools.getJSONByFile",
+	"class:get:shortName":"static:org.apache.commons.lang3.ClassUtils.getShortClassName",
+	"class:get:simpleName":"static:org.apache.commons.lang3.ClassUtils.getSimpleName",
+	"class:get:packgeName":"static:org.apache.commons.lang3.ClassUtils.getPackageName",
+	"class:get:superClasses":"static:org.apache.commons.lang3.ClassUtils.getAllSuperclasses",
+	"class:get:superInterfaces":"static:org.apache.commons.lang3.ClassUtils.getAllInterfaces",
+	"class:convert:classNamesToClasses":"static:org.apache.commons.lang3.ClassUtils.convertClassNamesToClasses",
+	"class:convert:classesToClassNames":"static:org.apache.commons.lang3.ClassUtils.convertClassesToClassNames",
+	"int:get:random":"static:org.apache.commons.lang3.RandomUtils.nextInt",
+	"byte:get:random":"static:org.apache.commons.lang3.RandomUtils.nextBytes",
+	"long:get:random":"static:org.apache.commons.lang3.RandomUtils.nextLong",
+	"double:get:random":"static:org.apache.commons.lang3.RandomUtils.nextDouble",
+	"float:get:random":"static::org.apache.commons.lang3.RandomUtils.nextFloat"
+}

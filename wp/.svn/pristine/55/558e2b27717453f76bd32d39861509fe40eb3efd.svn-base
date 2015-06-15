@@ -1,0 +1,37 @@
+package cn.wp.commons.wp_tools;
+
+import java.util.Map;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+import cn.wp.commons.wp_tools.json.JsonTools;
+
+public class StringTestCase {
+	
+	@Test
+	public void StringIsBlankCase(){
+		Assert.assertTrue(WPTools.execute("string:blank", Boolean.class, ""));
+	}
+	
+	@Test
+	public void StringIsNotBlankCase(){
+		Assert.assertFalse(WPTools.execute("string:notBlank", Boolean.class, ""));
+	}
+	
+	@Test
+	public void StringBase64Case(){
+		String encodeString = "王鹏";
+		String decodeString = "";
+		
+		decodeString = WPTools.execute("string:base64:encode",String.class, encodeString);
+		
+		Assert.assertEquals(encodeString, WPTools.execute("string:base64:decode", String.class, decodeString));
+	}
+	
+	
+	@Test
+	public void test(){
+		System.out.println(WPTools.execute("json:get:object", Map.class, "alias.tools.json",Map.class));
+	}
+}

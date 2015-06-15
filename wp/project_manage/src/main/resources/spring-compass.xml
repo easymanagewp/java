@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"     
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"     
+        xmlns:context="http://www.springframework.org/schema/context"
+        xmlns:mvc="http://www.springframework.org/schema/mvc"
+   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd   
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd   
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd   
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd 
+       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd 
+       ">
+	<bean id="annotationConfiguration" class="org.compass.annotations.config.CompassAnnotationsConfiguration"/>  
+      
+    <bean id="compass" class="org.compass.spring.LocalCompassBean">  
+        <!--  如果compass有单独的配置文件,可以从这里引入  
+        <property name="configLocation" value="classpath:compass.cfg.xml"/>  
+         -->  
+        <!-- 数据索引存储位置 -->  
+        <property name="connection" value="/lucene/indexes"/>  
+           
+        <property name="classMappings">  
+            <list>  
+                <value>cn.wp.pri.project_manager.entity.Matter</value>    
+            </list>  
+        </property>  
+        <property name="compassConfiguration" ref="annotationConfiguration"/>  
+        <property name="compassSettings">  
+            <props>  
+                <!-- 建立索引位置的另一种方式  
+                <prop key="compass.engine.connection">  
+                    file://${user.home}/lucene/indexes  
+                </prop>  
+                 -->  
+                <prop key="compass.transaction.factory">  
+                    org.compass.spring.transaction.SpringSyncTransactionFactory  
+                </prop>  
+                  
+                <!-- 指定摘要文本的长度 -->  
+                <prop key="compass.engine.highlighter.default.fragmenter.simple.size">  
+                    200  
+                </prop>  
+                  
+                <!-- 搜索内容高亮显示 -->  
+                <prop  key="compass.engine.highlighter.default.formatter.simple.pre">     
+                    <![CDATA[<span style='background-color:yellow;color:red;'>]]>     
+                </prop>     
+                <prop  key="compass.engine.highlighter.default.formatter.simple.post">     
+                  <![CDATA[</span>]]>     
+                </prop>   
+                <!--定义分词器-->         
+                <!--          
+                <prop     
+                    key="compass.engine.analyzer.default.type">     
+                   org.wltea.analyzer.lucene.IKAnalyzer  
+                </prop>    
+                -->  
+                <!--   
+                <prop key="compass.engine.analyzer.MMAnalyzer.CustomAnalyzer">  
+                    org.wltea.analyzer.lucene.IKAnalyzer  
+                    jeasy.analysis.MMAnalyzer  
+                    net.paoding.analysis.analyzer.PaodingAnalyzer  
+                </prop>  
+                -->  
+                  
+                <prop key="compass.engine.analyzer.MMAnalyzer.CustomAnalyzer">  
+                    net.paoding.analysis.analyzer.PaodingAnalyzer  
+                </prop>  
+                <!-- 
+                <prop key="compass.engine.analyzer.default.type">  
+                    org.wltea.analyzer.lucene.IKAnalyzer  
+                </prop>
+                 -->  
+                   
+            </props>  
+        </property>  
+        <property name="transactionManager" ref="transactionManager"/>  
+    </bean>  
+  
+    <bean id="jpaGpsDevice" class="org.compass.gps.device.jpa.JpaGpsDevice">  
+        <property name="name" value="jpaDevice"/>  
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>  
+        <property name="mirrorDataChanges" value="true"/>  
+    </bean>  
+  
+    <!-- 数据库中的记录变化后同步更新索引 -->  
+    <bean id="compassGps" class="org.compass.gps.impl.SingleCompassGps" init-method="start" destroy-method="stop">  
+        <property name="compass" ref="compass"/>  
+        <property name="gpsDevices">  
+            <list>  
+                <!-- compass2.1  
+                <bean class="org.compass.spring.device.SpringSyncTransactionGpsDeviceWrapper">  
+                    <property name="gpsDevice" ref="hibernateGpsDevice"/>  
+                </bean>  
+                 -->  
+                 <!-- compass2.2 -->  
+                 <ref local="jpaGpsDevice"/>  
+            </list>  
+        </property>  
+    </bean>  
+  
+    <!-- compass模板 -->  
+    <bean id="compassTemplate" class="org.compass.core.CompassTemplate">  
+        <property name="compass" ref="compass"/>  
+    </bean>  
+      
+    <!-- 定时重建索引(利用quartz)或随Spring ApplicationContext启动而重建索引 -->  
+    <bean id="compassIndexBuilder" lazy-init="false" class="cn.wp.pri.project_manager.compass.CompassIndexBuilder">  
+        <property name="compassGps" ref="compassGps"/>  
+        <property name="buildIndex" value="true"/>  
+        <property name="lazyTime" value="10"/>  
+    </bean>  
+</beans>
